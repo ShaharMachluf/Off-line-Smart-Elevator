@@ -1,23 +1,35 @@
 import json
-import Elevator
+from elevator import Elevator
+
+
 class Building:
-    _minFloor = 0
-    _maxFloor = 0
-    _elevators = []
 
-    def __init__(self, name_Building):
-        f = open(name_Building, "r")
+    def __init__(self, name_building):
+        try:
+            with open(name_building, "r") as f:
+                # Reading from file
+                data = json.loads(f.read())
+                self.minFloor = data["_minFloor"]
+                self.maxFloor = data["_maxFloor"]
+                self.elevators = []
+                self.make_elevator(data["_elevators"])
+        except FileNotFoundError:
+            print("file not found")
 
-        # Reading from file
-        data = json.loads(f.read())
-        _minFloor = data["_minFloor"]
-        _maxFloor = data["_maxFloor"]
-        self.makeElevator(data["_elevators"])
+    def get_elevator(self, index) -> Elevator:
+        """
+        return the elevator with the index "index"
+        :param index: number of the elevator
+        :return: an elevator
+        """
+        return self.elevators[index]
 
-    def getElevator(self, index):
-        return self._elevators[index]
-
-    def makeElevator(self,elevatorlist):
-        for i in range(len(elevatorlist)):
-            d=elevatorlist[i]
-            self._elevators[i]=Elevator(d["_id"],["_speed"],["_minFloor"],["_maxFloor"],["_closeTime"],["_openTime"],["_startTime"],["_stopTime"])
+    def make_elevator(self, elevator_list: list):
+        """
+        turns a list of dictioneries into a list of elevators
+        :param elevator_list: a list of dictioneries
+        :return: void
+        """
+        for i in range(len(elevator_list)):
+            d = elevator_list[i]
+            self.elevators[i] = Elevator(d["_id"], d["_speed"], d["_minFloor"], d["_maxFloor"], d["_closeTime"], d["_openTime"], d["_startTime"], d["_stopTime"])
