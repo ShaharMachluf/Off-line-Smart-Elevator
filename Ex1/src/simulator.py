@@ -2,6 +2,14 @@ from elevator import Elevator
 from call import Call
 
 
+def direction(last_floor, later_floor):
+    if int(later_floor[0]) < int(last_floor[0]):
+        return -1
+    if int(last_floor[0]) > int(last_floor[0]):
+        return 1
+    return 0
+
+
 class Simulator:
     def __init__(self, elev: Elevator, time: float):
         self.elev = elev
@@ -15,26 +23,18 @@ class Simulator:
             self.times[src] = c.time+self.travel_time(0, c.src)
             self.times[dest] = self.times[src] + self.travel_time(c.src, c.dest)
         else:
-            last_floor = (0, 0)
-            count = 0
-            for item in self.times.items():
-                if last_floor[1] < item[1] <= c.time:
-                    last_floor = (int(item[0]), item[1])
-                    count += 1
-            if count == len(self.times):
-
-
-
-    def direction(self, last_floor):
-        min_time = (0, 0)
-        for item in self.times.items():
-            if min_time[1] > item[1] > last_floor[1]:
-                min_time = (int(item[0]), item[1])
-        if min_time[0]<last_floor[0]:
-            return  -1
-        if min_time[0]>last_floor[0]:
-            return 1
-        return 0
+            dict(sorted(self.times.items(), key=lambda item: item[1]))
+            it = iter(self.times)
+            while it[1] < c.time and it.__next__() is not None:
+                it.__next__()
+            last_floor = it
+            if it.__next__() is None:
+                self.times[src] = self.travel_time(int(last_floor[0]), c.src)
+                self.times[dest] = self.travel_time(c.src, c.dest)
+            else:
+                later_floor = it.__next__()
+                curr_direct = direction(last_floor, later_floor)
+                # complete the case that the call is in the middle
 
     def travel_time(self, src, dest):
         start = self.elev.start_time
