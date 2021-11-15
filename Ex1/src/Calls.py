@@ -1,4 +1,4 @@
-class Calls:
+class Call:
 
     def __init__(self, namelist):
         self.time = namelist[1]
