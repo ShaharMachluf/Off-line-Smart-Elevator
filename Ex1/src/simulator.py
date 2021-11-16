@@ -61,7 +61,7 @@ class Simulator:
             last_floor = last_floor.__next__
         else:  # c.src is between two floors
             while last_floor.__next__() is not None:
-                if int(last_floor[0]) < c.src < int(last_floor.__next__()[0]) or int(last_floor[0]) > c.src > int(
+                if int(last_floor[0]) <= c.src < int(last_floor.__next__()[0]) or int(last_floor[0]) >= c.src > int(
                         last_floor.__next__()[0]):
                     src_time = self.travel_time(int(last_floor[0]), c.src) + last_floor[1]
                     last_floor = last_floor.__next__()
@@ -96,7 +96,7 @@ class Simulator:
             last_floor = last_floor.__next__
         else:  # c.dest is between floors
             while last_floor.__next__() is not None:
-                if int(last_floor[0]) < c.dest < int(last_floor.__next__()[0]) or int(last_floor[0]) > c.dest > int(
+                if int(last_floor[0]) <= c.dest < int(last_floor.__next__()[0]) or int(last_floor[0]) >= c.dest > int(
                         last_floor.__next__()[0]):
                     dest_time = self.travel_time(int(last_floor[0]), c.dest) + last_floor[1]
                     last_floor = last_floor.__next__()
@@ -130,6 +130,51 @@ class Simulator:
                 min_floor = item
         return min_floor
 
+    def get_pos(self, time):
+        """
+        check the current position of the elevator
+        :param time: the time in which we want to check the elevator position
+        :return: floor number
+        """
+        if len(self.times) == 0:  # first call
+            return 0
+        dict(sorted(self.times.items(), key=lambda item: item[1]))
+        it = iter(self.times)
+        while it.__next__() is not None:
+            if it[1] <= time <= it.__next__()[1]:
+                break
+            it = it.__next__()
+        if it.__next__() is None:  # the elevator finished it's last call
+            return int(it[0])
+        last_time = it[1]
+        if self.get_direction(time) == 1:  # the elevator is going up in this time
+            for i in range(int(it[0]), int(it.__next__()[0])):
+                if self.travel_time(int(it[0]), i) + last_time > time:
+                    return i
+        else:  # the elevator is going down
+            for i in range(int(it[0]), int(it.__next__()[0]), -1):
+                if self.travel_time(int(it[0]), i) + last_time > time:
+                    return i
+
+    def get_direction(self, time):
+        """
+        check the current direction of the elevator
+        :param time: the time in which we want to check the elevator direction
+        :return: the direction (0 = level, 1 = up, -1 = down)
+        """
+        if len(self.times) == 0:
+            return 0
+        dict(sorted(self.times.items(), key=lambda item: item[1]))
+        it = iter(self.times)
+        while it.__next__() is not None:
+            if it[1] <= time <= it.__next__()[1]:
+                if int(it[0]) < int(it[1]):
+                    return 1
+                return -1
+            it = it.__next__()
+        if it.__next__() is None:
+            return 0
+
     def travel_time(self, src, dest):
         """
         calculate travel time between two floors
@@ -141,6 +186,7 @@ class Simulator:
         stop = self.elev.stop_time
         open_t = self.elev.open_time
         close_t = self.elev.close_time
-        dist = (src + dest) / self.elev.speed
+        dist = (abs(src - dest)) / self.elev.speed
+        if src == dest:
+            return close_t + open_t
         return start + stop + open_t + close_t + dist
-
