@@ -185,6 +185,7 @@ class Elevator:
         for i in range(self.times[k_list[i]], self.times[k_list[i+1]]):
             if self.travel_time(last_floor, i) + last_time > time:
                 return i
+        return self.times[k_list[i]]
 
     def get_direction(self, time):
         """
