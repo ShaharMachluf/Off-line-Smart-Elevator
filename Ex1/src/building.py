@@ -32,4 +32,4 @@ class Building:
         """
         for i in range(len(elevator_list)):
             d = elevator_list[i]
-            self.elevators[i] = Elevator(d["_id"], d["_speed"], d["_minFloor"], d["_maxFloor"], d["_closeTime"], d["_openTime"], d["_startTime"], d["_stopTime"])
+            self.elevators.append(Elevator(d["_id"], d["_speed"], d["_minFloor"], d["_maxFloor"], d["_closeTime"], d["_openTime"], d["_startTime"], d["_stopTime"]))

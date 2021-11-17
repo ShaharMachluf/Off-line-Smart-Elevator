@@ -3,8 +3,8 @@
 class Call:
     def __init__(self, namelist):
 
-        self.time = namelist[1]
-        self.src = namelist[2]
-        self.dest = namelist[3]
-        self.status = namelist[4]
-        self.elevator = namelist[5]
+        self.time = float(namelist[1])
+        self.src = int(namelist[2])
+        self.dest = int(namelist[3])
+        self.status = int(namelist[4])
+        self.elevator = int(namelist[5])

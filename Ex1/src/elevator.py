@@ -39,10 +39,10 @@ class Elevator:
             dict(sorted(self.times.items(), key=lambda item: item[0]))
             k_list = list(self.times.keys())
             i = 0
-            while int(k_list[i]) < c.time and k_list[i+1] is not None:
+            while float(k_list[i]) < c.time and i < len(k_list)-1:
                 i += 1
             last_floor = self.times[k_list[i]]
-            if k_list[i+1] is None:  # this call is recived after all the others are finished
+            if i == len(k_list):  # this call is recived after all the others are finished
                 src_time = self.travel_time(last_floor, c.src) + c.time
                 dest_time = self.travel_time(c.src, c.dest) + src_time
                 self.times[str(src_time)] = c.src
@@ -51,10 +51,10 @@ class Elevator:
                 highest = self.highest_floor()
                 lowest = self.lowest_floor()
                 src_item = self.insert_src(k_list, i, c, highest, lowest)
-                dict(sorted(self.times.items(), key=lambda item: item[0]))
+                dict(sorted(self.times.items(), key=lambda item: float(item[0])))
                 k_list = list(self.times.keys())
                 i = 0
-                while k_list[i] != src_item[0]:
+                while float(k_list[i]) != float(src_item[0]):
                     i += 1
                 self.insert_dest(k_list, i, c, highest, lowest)
 
@@ -80,17 +80,25 @@ class Elevator:
             src_time = self.travel_time(self.times[k_list[i]], c.src) + float(k_list[i])
             i += 1
         else:  # c.src is between two floors
-            while k_list[i+1] is not None:
+            while i < len(k_list)-1:
                 if self.times[k_list[i]] <= c.src < self.times[k_list[i+1]] or self.times[k_list[i]] >= c.src > self.times[k_list[i+1]]:
                     src_time = self.travel_time(self.times[k_list[i]], c.src) + float(k_list[i])
                     i += 1
                     break
                 i += 1
-        k_list[i] = str(src_time + self.travel_time(c.src, self.times[k_list[i]]))
-        while k_list[i+1] is not None:  # update the times of the later floors
-            k_list[i+1] = str(float(k_list[i]) + self.travel_time(self.times[k_list[i]], self.times[k_list[i+1]]))
+        x=str(src_time + self.travel_time(c.src, self.times[k_list[i]]))
+        self.times[x] = self.times[k_list[i]]
+        self.times.pop(k_list[i])
+        k_list[i] = x
+        i += 1
+        while i < len(k_list)-1:  # update the times of the later floors
+            x=str(float(k_list[i]) + self.travel_time(self.times[k_list[i]], self.times[k_list[i+1]]))
+            self.times[x] = self.times[k_list[i+1]]
+            self.times.pop(k_list[i+1])
+            k_list[i + 1] = x
+            i += 1
         self.times[str(src_time)] = c.src
-        tup = (str(c.src), src_time)
+        tup = (str(src_time), c.src)
         return tup
 
     def insert_dest(self, k_list: list, i, c, highest, lowest):
@@ -115,15 +123,22 @@ class Elevator:
             dest_time = self.travel_time(self.times[k_list[i]], c.dest) + float(k_list[i])
             i += 1
         else:  # c.dest is between floors
-            while k_list[i+1] is not None:
+            while i < len(k_list)-1:
                 if self.times[k_list[i]] <= c.dest < self.times[k_list[i+1]] or self.times[k_list[i]] >= c.dest > self.times[k_list[i+1]]:
                     dest_time = self.travel_time(self.times[k_list[i]], c.dest) + float(k_list[i])
                     i += 1
                     break
                 i += 1
-        k_list[i] = str(dest_time + self.travel_time(c.dest, self.times[k_list[i]]))
-        while k_list[i+1] is not None:  # update the times of the later floors
-            k_list[i+1] = str(float(k_list[i]) + self.travel_time(self.times[k_list[i]], self.times[k_list[i+1]]))
+        x = str(dest_time + self.travel_time(c.dest, self.times[k_list[i]]))
+        self.times[x] = self.times[k_list[i]]
+        self.times.pop(k_list[i])
+        k_list[i] = x
+        i += 1
+        while i < len(k_list)-1:  # update the times of the later floors
+            x = str(float(k_list[i]) + self.travel_time(self.times[k_list[i]], self.times[k_list[i + 1]]))
+            k_list[i + 1] = x
+            self.times[x] = self.times[k_list[i + 1]]
+            self.times.pop(k_list[i + 1])
         self.times[str(dest_time)] = c.dest
 
     def highest_floor(self):
@@ -156,14 +171,14 @@ class Elevator:
         """
         if len(self.times) == 0:  # first call
             return 0
-        dict(sorted(self.times.items(), key=lambda item: item[0]))
+        dict(sorted(self.times.items(), key=lambda item: float(item[0])))
         k_list = list(self.times.keys())
         i = 0
-        while k_list[i+1] is not None:
+        while i < len(k_list)-1 :
             if float(k_list[i]) <= time <= float(k_list[i+1]):
                 break
             i += 1
-        if k_list[i+1] is None:  # the elevator finished it's last call
+        if i == len(k_list)-1:  # the elevator finished it's last call
             return self.times[k_list[i]]
         last_time = float(k_list[i])
         last_floor = self.times[k_list[i]]
@@ -182,14 +197,18 @@ class Elevator:
         dict(sorted(self.times.items(), key=lambda item: item[0]))
         k_list = list(self.times.keys())
         i = 0
-        while k_list[i+1] is not None:
+        if self.calls[0].time <=time:
+            if self.times[k_list[0]] > 0:
+                return 1
+            else:
+                return -1
+        while i < len(k_list)-1:
             if float(k_list[i]) <= time <= float(k_list[i+1]):
                 if self.times[k_list[i]] < self.times[k_list[i+1]]:
                     return 1
                 return -1
             i += 1
-        if k_list[i+1] is None:
-            return 0
+        return 0
 
     def travel_time(self, src, dest):
         """
@@ -202,7 +221,8 @@ class Elevator:
         stop = self.stop_time
         open_t = self.open_time
         close_t = self.close_time
-        dist = (abs(src - dest)) / self.speed
-        if src == dest:
-            return close_t + open_t
+        dist = (abs((src - dest))/ int(self.speed))
+        #if src == dest:
+         #   return close_t + open_t
+
         return start + stop + open_t + close_t + dist
