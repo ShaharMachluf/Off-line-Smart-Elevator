@@ -221,7 +221,7 @@ class Elevator:
         stop = self.stop_time
         open_t = self.open_time
         close_t = self.close_time
-        dist = (abs((src - dest))/ int(self.speed))
+        dist = (abs((src - dest))/ float(self.speed))
         #if src == dest:
          #   return close_t + open_t
 
