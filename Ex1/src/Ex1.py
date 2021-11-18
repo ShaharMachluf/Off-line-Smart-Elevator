@@ -81,9 +81,15 @@ def algo( call,num,b1,my_ans,calls,my_list): # the algoritem
 
 
 if __name__=="__main__":
-    my_building="B2.json"
-    my_calls="Calls_a.csv"
-    output="out.csv"
+    myinput=input("anter the names of building file , calls file , output file :")
+    myinput =myinput.split(' ')
+    my_building=myinput[0]
+    my_calls=myinput[1]
+    # pathb="C:/Users/shaim/PycharmProjects/OOP_2021/Assignments/Ex1/data/Ex1_input/Ex1_Buildings/"
+    # my_building=pathb+my_building
+    # pathc="C:/Users/shaim/PycharmProjects/OOP_2021/Assignments/Ex1/data/Ex1_input/Ex1_Calls/"
+    # my_calls=pathc+my_calls
+    output= myinput[2]
     b1 = Building(my_building)
     my_ans = []
     ans = output

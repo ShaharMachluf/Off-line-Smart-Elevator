@@ -182,9 +182,9 @@ class Elevator:
             return self.times[k_list[i]]
         last_time = float(k_list[i])
         last_floor = self.times[k_list[i]]
-        for i in range(self.times[k_list[i]], self.times[k_list[i+1]]):
-            if self.travel_time(last_floor, i) + last_time > time:
-                return i
+        for j in range(self.times[k_list[i]], self.times[k_list[i+1]]):
+            if self.travel_time(last_floor, j) + last_time > time:
+                return j
         return self.times[k_list[i]]
 
     def get_direction(self, time):
