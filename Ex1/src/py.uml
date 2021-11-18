@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#C:/Users/shaha/PycharmProjects/OOP_ariel/Ex1/src/Building.py</OriginalElement>
+  <nodes>
+    <node x="0.0" y="820.0">Ex1.Ex1.Ex1</node>
+    <node x="540.0" y="697.0">Ex1.src.Elevator.Elevator</node>
+    <node x="129.0" y="752.0">Ex1.src.Calls.Calls</node>
+    <node x="234.75" y="0.0">typing.Hashable</node>
+    <node x="295.0" y="752.0">Ex1.src.Building.Building</node>
+    <node x="190.75" y="106.0">object</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="Ex1.src.Elevator.Elevator" target="object" relationship="REALIZATION">
+      <point x="0.0" y="-138.5" />
+      <point x="791.0" y="672.0" />
+      <point x="304.75" y="672.0" />
+      <point x="0.0" y="270.5" />
+    </edge>
+    <edge source="Ex1.src.Calls.Calls" target="object" relationship="REALIZATION">
+      <point x="0.0" y="-83.5" />
+      <point x="202.0" y="672.0" />
+      <point x="304.75" y="672.0" />
+      <point x="0.0" y="270.5" />
+    </edge>
+    <edge source="object" target="typing.Hashable" relationship="INTERFACE">
+      <point x="0.0" y="-270.5" />
+      <point x="0.0" y="28.0" />
+    </edge>
+    <edge source="Ex1.Ex1.Ex1" target="object" relationship="REALIZATION">
+      <point x="0.0" y="-15.5" />
+      <point x="54.5" y="672.0" />
+      <point x="304.75" y="672.0" />
+      <point x="0.0" y="270.5" />
+    </edge>
+    <edge source="Ex1.src.Building.Building" target="object" relationship="REALIZATION">
+      <point x="0.0" y="-83.5" />
+      <point x="407.5" y="672.0" />
+      <point x="304.75" y="672.0" />
+      <point x="0.0" y="270.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.5291750503018109" showDependencies="false" x="521.0" y="487.0" />
+  <SelectedNodes>
+    <node>Ex1.src.Elevator.Elevator</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+</Diagram>
+
